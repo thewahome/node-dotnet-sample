@@ -15,19 +15,19 @@ namespace Sample
         private static readonly CancellationTokenSource source = new CancellationTokenSource();
         private static readonly CancellationToken token = source.Token;
 
-        public async static Task<string> GenerateAsync(string spec, string language, string clientClassName, string namespaceName, string includePatterns, string excludePatterns)
+        public async static Task<string> GeneratePluginAsync(string spec, string pluginName, string namespaceName, string includePatterns, string excludePatterns)
         {
             var cl = new ConsoleLogger();
             ILogger<KiotaBuilder> consoleLogger = cl;
 
             try
             {
-                Console.WriteLine($"Starting to Generate with parameters: {language}, {clientClassName}, {namespaceName}");
+                Console.WriteLine($"Starting to Generate a plugin with parameters: {pluginName}, {namespaceName}");
 
                 var defaultConfiguration = new GenerationConfiguration();
 
                 var hashedUrl = BitConverter.ToString(HashAlgorithm.Value!.ComputeHash(Encoding.UTF8.GetBytes(spec))).Replace("-", string.Empty);
-                string OutputPath = Path.Combine(Path.GetTempPath(), "kiota", "generation", hashedUrl);
+                string OutputPath = Path.Combine(Path.GetTempPath(), "kiota", "plugin-generation", hashedUrl);
 
                 if (File.Exists(OutputPath))
                 {
@@ -54,19 +54,13 @@ namespace Sample
                 }
                 await File.WriteAllTextAsync(OpenapiFile, spec);
 
-                if (!Enum.TryParse<GenerationLanguage>(language, out var parsedLanguage))
-                {
-                    throw new ArgumentOutOfRangeException($"Not supported language: {language}");
-                }
-
                 var generationConfiguration = new GenerationConfiguration
                 {
                     OpenAPIFilePath = OpenapiFile,
                     IncludePatterns = (includePatterns is null) ? new() : includePatterns?.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(static x => x.Trim()).ToHashSet(),
                     ExcludePatterns = (excludePatterns is null) ? new() : excludePatterns?.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(static x => x.Trim()).ToHashSet(),
-                    Language = parsedLanguage,
                     OutputPath = OutputPath,
-                    ClientClassName = clientClassName,
+                    PluginTypes = new() { PluginType.APIPlugin },
                     ClientNamespaceName = namespaceName,
                     IncludeAdditionalData = false,
                     UsesBackingStore = false,
@@ -81,7 +75,7 @@ namespace Sample
                 try
                 {
                     var builder = new KiotaBuilder(consoleLogger, generationConfiguration, new HttpClient());
-                    var result = await builder.GenerateClientAsync(token).ConfigureAwait(false);
+                    var result = await builder.GeneratePluginAsync(token).ConfigureAwait(false);
                 }
                 catch (Exception e)
                 {
@@ -95,7 +89,7 @@ namespace Sample
                     }
                 }
 
-                var zipFilePath = Path.Combine(Path.GetTempPath(), "kiota", "clients", hashedUrl, "client.zip");
+                var zipFilePath = Path.Combine(Path.GetTempPath(), "kiota", "plugins", hashedUrl, "plugins.zip");
                 if (File.Exists(zipFilePath))
                     File.Delete(zipFilePath);
                 else

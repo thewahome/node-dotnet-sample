@@ -9,10 +9,9 @@ declare module 'node-api-dotnet' {
 		export class Generator {
 			constructor();
 
-			static GenerateAsync(
+			static GeneratePluginAsync(
 				spec: string,
-				language: string,
-				clientClassName: string,
+				pluginName: string,
 				namespaceName: string,
 				includePatterns: string,
 				excludePatterns: string,

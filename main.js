@@ -6,8 +6,10 @@ loadAssemblies();
 
 try {
   let yaml = getSampleYamlFile();
-  const generator = await new dotnet.Sample.Generator.GenerateAsync(yaml, "Java", "demo", "my-namespace", "", "");
-  console.log(generator);
+  const generationResults = await new dotnet.Sample.Generator.GeneratePluginAsync(yaml, "Petstore", "Petstore", "", "");
+  if (generationResults) {
+    console.log('Generated')
+  }
 } catch (error) {
   console.error(error)
 }
