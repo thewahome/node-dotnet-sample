@@ -1,15 +1,13 @@
-import { fileURLToPath } from 'url';
-import { dirname, join } from 'path';
 import dotnet from 'node-api-dotnet';
+import { loadAssemblies } from './load-assemblies.js';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+loadAssemblies();
 
-const relativeDLLPath = 'bin/Release/net8.0/publish/node-dotnet-sample.dll';
-const absoluteDLLPath = join(__dirname, relativeDLLPath);
+try {
+  const greeter = new dotnet.Sample.Greeter();
+  greeter.Greet('World');
+} catch (error) {
+  console.error(error)
+}
 
-dotnet.load(absoluteDLLPath);
 
-const greeter = new dotnet.Sample.Greeter();
-
-JSON.stringify(greeter.Greet('Node.js'));

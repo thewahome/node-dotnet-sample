@@ -4,8 +4,8 @@
   },
   "type": "module",
   "scripts": {
-    "build": "dotnet publish -c Release && npm run codegen:ts",
-    "codegen:ts": "node-api-dotnet-generator -a bin/Release/net8.0/publish/node-dotnet-sample.dll -t types.d.ts",
+    "build": "dotnet publish -c Release -o ./publish && npm run codegen:ts",
+    "codegen:ts": "node-api-dotnet-generator -a publish/node-dotnet-sample.dll -t types.d.ts",
     "start": "node main.js"
   },
   "devDependencies": {
