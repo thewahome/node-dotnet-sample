@@ -1,13 +1,13 @@
 import dotnet from 'node-api-dotnet';
-import { loadAssemblies } from './load-assemblies.js';
+
+import { getSampleYamlFile, loadAssemblies } from './file-access.js';
 
 loadAssemblies();
 
 try {
-  const greeter = new dotnet.Sample.Greeter();
-  greeter.Greet('World');
+  let yaml = getSampleYamlFile();
+  const generator = await new dotnet.Sample.Generator.GenerateAsync(yaml, "Java", "demo", "my-namespace", "", "");
+  console.log(generator);
 } catch (error) {
   console.error(error)
 }
-
-

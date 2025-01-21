@@ -6,10 +6,17 @@
 declare module 'node-api-dotnet' {
 
 	export namespace Sample {
-		export class Greeter {
+		export class Generator {
 			constructor();
 
-			Greet(name: string): void;
+			static GenerateAsync(
+				spec: string,
+				language: string,
+				clientClassName: string,
+				namespaceName: string,
+				includePatterns: string,
+				excludePatterns: string,
+			): Promise<string>;
 		}
 	}
 }
