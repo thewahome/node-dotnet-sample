@@ -12,7 +12,7 @@
     "prepack": "npm run build"
   },
   "files": [
-    "publish/**/*"
+    "publish/**/*.dll"
   ],
   "devDependencies": {
     "node-api-dotnet-generator": "^0.5.13"
