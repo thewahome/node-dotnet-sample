@@ -1,4 +1,6 @@
 {
+  "name": "node-dotnet-sample",
+  "version": "1.0.0",
   "dependencies": {
     "node-api-dotnet": "^0.5.13"
   },
@@ -6,8 +8,12 @@
   "scripts": {
     "build": "dotnet publish -c Release -o ./publish && npm run codegen:ts",
     "codegen:ts": "node-api-dotnet-generator -a publish/node-dotnet-sample.dll -t types.d.ts",
-    "start": "node main.js"
+    "start": "node main.js",
+    "prepack": "npm run build"
   },
+  "files": [
+    "publish/**/*"
+  ],
   "devDependencies": {
     "node-api-dotnet-generator": "^0.5.13"
   }
